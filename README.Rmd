@@ -17,7 +17,7 @@ This R provides a lean set of code for computing specific values from an exposur
 
 * **Data** objects containing the minimal set of information needed to calculate the full ERC or any desired values from it. Data files are provided for published ERC curves (see examples below).
 
-* **Functions**. Currently, there are three R functions included, which are exact copies of functions of the same name from the `bercs` package. They are included here in `PMerc` to facilitate calculating ERC values without requiring the full `bercs` package (which requires compiled C code for the STAN model objects). This package is recommended only for calculating specific risk measures from the accompanying data files. If developing your own models, it is recommended to use the functions in the `bercs` package and not these. It is possible that these functions may be removed at a future date.
+* **Functions**. Currently, there are four R functions included (including `compute_OR2()`), which are derived from functions of similar name from the `bercs` package (e.g. `compute_OR`). They are included here in `PMerc` to facilitate calculating ERC values without requiring the full `bercs` package, which requires compiled C code for the STAN model objects. This package is recommended only for calculating specific risk measures from the accompanying data files. If developing your own models, it is recommended to use the functions in the `bercs` package and not these. It is possible that these functions may be removed at a future date.
 
 To install `PMerc`, use the following commands:  
 ```
@@ -32,30 +32,18 @@ library(splines2)
 
 data(nepal_pm_alri)
 
-erc <- compute_ERC2(
-                      expsequence = c(35, 37, 50, 75, 100, 150, 200),
-                      ref_exposure=50,
-                      inclInterceptUncertainty=T,
-                      ciband=0.95,
-                      beta_post=nepal_pm_alri$posterior_params$beta,
-                      bs_post=nepal_pm_alri$posterior_params$bS,
-                      xdf=nepal_pm_alri$model_data$xdf,
-                      nS=nepal_pm_alri$model_data$S,
-                      Mx=nepal_pm_alri$model_data$Mx,
-                      intercept_prop="equal",
-                      Mx_attributes = nepal_pm_alri$model_data$Mx_attributes)
-erc
+compute_OR2(
+    expsequence = c(35, 37.5, 50, 75, 100, 150, 200, 400),
+    ref_exposure=50,
+    ciband=0.95,
+    beta_post=nepal_pm_alri$posterior_params$beta,
+    bs_post=nepal_pm_alri$posterior_params$bS,
+    xdf=nepal_pm_alri$model_data$xdf,
+    nS=nepal_pm_alri$model_data$S,
+    Mx=nepal_pm_alri$model_data$Mx,
+    Mx_attributes = nepal_pm_alri$model_data$Mx_attributes)
 ```
 
-These values are on the log-odds scale. To compute odds ratios, exponentiate:
-
-```{r}
-library(dplyr)
-erc %>%
-    mutate(OR=exp(mean),
-           ORlow=exp(low),
-           ORhigh=exp(high))
-```
 
 
 ## Community guidelines

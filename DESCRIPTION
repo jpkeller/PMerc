@@ -1,5 +1,5 @@
 Package: PMerc
-Version: 0.0.1.9000
+Version: 0.0.1.9001
 Title: Calculate particulate matter (PM) Exposure-Response Curves (ERC)
 Description: Collection of functions and data objects for computing odds ratios for specified fine particulate matter (PM2.5) exposures.
 Authors@R: person("Joshua", "Keller", email="joshua.keller@colostate.edu", role=c("aut", "cre"))
