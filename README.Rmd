@@ -1,0 +1,63 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(ggplot2)
+```
+
+# PMerc
+
+Pariculate Matter (PM) Exposure-Response Curves (ERCs)
+
+This R provides a lean set of code for computing specific values from an exposure-response curve developed using the [`bercs`](www.github.com/jpkeller/bercs) R package. This package contains two elements:
+
+* **Data** objects containing the minimal set of information needed to calculate the full ERC or any desired values from it. Data files are provided for published ERC curves (see examples below).
+
+* **Functions**. Currently, there are three R functions included, which are exact copies of functions of the same name from the `bercs` package. They are included here in `PMerc` to facilitate calculating ERC values without requiring the full `bercs` package (which requires compiled C code for the STAN model objects). This package is recommended only for calculating specific risk measures from the accompanying data files. If developing your own models, it is recommended to use the functions in the `bercs` package and not these. It is possible that these functions may be removed at a future date.
+
+To install `PMerc`, use the following commands:  
+```
+devtools::install_github("jpkeller/PMerc")
+```
+
+## Example: PM-ALRI Curve Values
+
+```{r}
+library(PMerc)
+library(splines2)
+
+data(nepal_pm_alri)
+
+erc <- compute_ERC2(
+                      expsequence = c(35, 37, 50, 75, 100, 150, 200),
+                      ref_exposure=50,
+                      inclInterceptUncertainty=T,
+                      ciband=0.95,
+                      beta_post=nepal_pm_alri$posterior_params$beta,
+                      bs_post=nepal_pm_alri$posterior_params$bS,
+                      xdf=nepal_pm_alri$model_data$xdf,
+                      nS=nepal_pm_alri$model_data$S,
+                      Mx=nepal_pm_alri$model_data$Mx,
+                      intercept_prop="equal",
+                      Mx_attributes = nepal_pm_alri$model_data$Mx_attributes)
+erc
+```
+
+These values are on the log-odds scale. To compute odds ratios, exponentiate:
+
+```{r}
+library(dplyr)
+erc %>%
+    mutate(OR=exp(mean),
+           ORlow=exp(low),
+           ORhigh=exp(high))
+```
+
+
+## Community guidelines
+
+If you have a bug to report, are having technical issues, or want to recommend features, please open a [Github Issue](https://github.com/jpkeller/bercs/issues). 
