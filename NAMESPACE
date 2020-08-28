@@ -2,6 +2,7 @@
 
 export(center_ERC2)
 export(compute_ERC2)
+export(compute_OR2)
 export(plot_ERC2)
 import(ggplot2)
 importFrom(stats,quantile)

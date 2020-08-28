@@ -4,6 +4,7 @@
 \alias{compute_ERC2}
 \alias{plot_ERC2}
 \alias{center_ERC2}
+\alias{compute_OR2}
 \title{Extract fitted Exposure-Response Curve (ERC)}
 \usage{
 compute_ERC2(
@@ -34,6 +35,24 @@ plot_ERC2(
 )
 
 center_ERC2(obj, ref_exposure = min(obj$exposure))
+
+compute_OR2(
+  exprange = c(0, 100),
+  expsequence = NULL,
+  ref_exposure = 0,
+  ciband = 0.95,
+  inclInterceptUncertainty = TRUE,
+  inclIntercept = FALSE,
+  intercept_prop = c("equal", "obs"),
+  study = NULL,
+  beta_post,
+  bs_post,
+  nS,
+  Mx,
+  Mx_attributes,
+  xdf,
+  ...
+)
 }
 \arguments{
 \item{exprange}{range of exposure values over which to compute the curve}
@@ -66,7 +85,7 @@ center_ERC2(obj, ref_exposure = min(obj$exposure))
 
 \item{...}{Passed to \code{\link{seq}} to control sequence of exposure values.}
 
-\item{obj}{Data frame, or list of data frames, containing \code{exposure}, \code{mean}, \code{low}, and \code{high}. Typically generated from \code{\link{compute_ERC2}}.}
+\item{obj}{Data frame, or list of data frames, containing \code{exposure}, \code{mean}, \code{low}, and \code{high}. Typically generated from \code{compute_ERC2}.}
 
 \item{incS}{If model has a single curve but with different selections of intercept uncertainty, this indicates which choice of uncertainty to use. Defaults to the last column of the curve in \code{obj}, which is typically the averaged intercept uncertainty. If multiple curves are fit, this selects which curve(s) is plotted.}
 
@@ -89,6 +108,8 @@ Currently, the fitted curve is plotted based upon the posterior means of the par
 
 Uncertainty from the intercepts is included in the confidence bands by default, since this corresponds to a common interpretation of such intervals. This requires picking a single value for the intercept.
 For models fit to multiple studies, a separate set of uncertainty will be created for each study. Additionally, a set of results corresponding to "average" intercept is created. The \code{intercept_prop} argument controls the relative contribution of the intercepts from each model.
+
+To calculate odds ratios for specific combinations of exposure values, use the `compute_OR2` function, which will correctly calculate the credible intervals for the relative difference.
 }
 \seealso{
 \code{\link[bercs]{compute_ERC}}

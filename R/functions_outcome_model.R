@@ -118,7 +118,7 @@ compute_ERC2 <- function (  exprange = c(0, 100),
 }
 
 ##' @rdname compute_ERC2
-##' @param obj Data frame, or list of data frames, containing \code{exposure}, \code{mean}, \code{low}, and \code{high}. Typically generated from \code{\link{compute_ERC2}}.
+##' @param obj Data frame, or list of data frames, containing \code{exposure}, \code{mean}, \code{low}, and \code{high}. Typically generated from \code{compute_ERC2}.
 ##' @param incS If model has a single curve but with different selections of intercept uncertainty, this indicates which choice of uncertainty to use. Defaults to the last column of the curve in \code{obj}, which is typically the averaged intercept uncertainty. If multiple curves are fit, this selects which curve(s) is plotted.
 ##' @param expERC Should the fitted curve be exponentiated (TRUE) or not (FALSE).
 ##' @param ylab String providing y-axis label.
@@ -201,8 +201,9 @@ center_ERC2 <- function(obj, ref_exposure=min(obj$exposure)){
 }
 
 
-##' @rdname compute_ERC
-##' @details To calculate odds ratios for specific combinations of exposure values, use the `compute_OR` function, which will correctly calculate the credible intervals for the relative difference.
+##' @rdname compute_ERC2
+##' @details To calculate odds ratios for specific combinations of exposure values, use the `compute_OR2` function, which will correctly calculate the credible intervals for the relative difference.
+##' @export
 compute_OR2 <- function (exprange = c(0, 100),
                         expsequence=NULL,
                         ref_exposure=0,
@@ -221,9 +222,6 @@ compute_OR2 <- function (exprange = c(0, 100),
 {
   if (ciband < 0 || ciband > 1)
     stop("'ciband' must be between 0 and 1.")
-  if (missing(beta_post)) {
-    beta_post <- rstan::extract(stanfit, pars = "beta")$beta
-  }
 
   if (is.null(expsequence)){
     expsequence <- seq(exprange[1], exprange[2],...)
