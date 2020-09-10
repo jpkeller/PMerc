@@ -7,7 +7,7 @@ Pariculate Matter (PM) Exposure-Response Curves (ERCs)
 
 This R provides a lean set of code for computing specific values from an
 exposure-response curve developed using the
-[`bercs`](www.github.com/jpkeller/bercs) R package. This package
+[`bercs`](http://www.github.com/jpkeller/bercs) R package. This package
 contains two elements:
 
   - **Data** objects containing the minimal set of information needed to
